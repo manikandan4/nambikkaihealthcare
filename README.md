@@ -233,19 +233,46 @@ Confirm: open `http://localhost:3000/health` in a browser.
 
 ### 4. Serve the frontend
 
-The frontend calls `http://localhost:3000/api` (see `frontend/js/api.js`). Serve `frontend/html` over HTTP — **not** `file://`, or fetch may fail.
+The frontend calls `http://localhost:3000/api` (see `frontend/js/api.js`). Serve the **whole `frontend/` folder** over HTTP — **not** only `frontend/html` and not `file://`.
+
+Why serve the whole `frontend/` folder? The HTML pages live in `frontend/html`, but they reference shared files using paths like:
+
+```html
+<link rel="stylesheet" href="../css/app.css">
+<script src="../js/auth.js"></script>
+```
+
+If you serve only `frontend/html`, those `../css` and `../js` paths point outside the static server root and return 404.
 
 **Option A — VS Code Live Server**
 
-Open `frontend/html/index.html` → “Open with Live Server” (usually port 5500).
+Open the `frontend/` folder with Live Server, then browse to `html/index.html`.
 
 **Option B — `npx serve`**
 
 ```bash
-npx serve frontend/html -p 5500
+npx serve frontend -p 5500
 ```
 
-Then open `http://localhost:5500/index.html`.
+Then open:
+
+```text
+http://localhost:5500/html/index.html
+```
+
+If testing from another device or VM/network interface, replace `localhost` with your machine IP, for example:
+
+```text
+http://192.168.80.1:5500/html/index.html
+```
+
+Quick asset checks:
+
+```text
+http://localhost:5500/css/app.css
+http://localhost:5500/js/auth.js
+http://localhost:5500/js/login.js
+```
 
 ### 5. Try the three portals
 
